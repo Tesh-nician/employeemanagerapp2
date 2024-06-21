@@ -22,8 +22,8 @@ import { CommonModule } from '@angular/common'; //JDR: did vervangt import in ee
 })
 
 export class AppComponent implements OnInit{
-  title = 'employeemanagerapp'
-  public employees: Employee[]= [];
+  title = 'employeemanagerapp';
+  public employees: Employee[] = []; //JDR geinitialiseerd
   public editEmployee: Employee = {} as Employee; //maakt een lege Employee object aan, anders krijg je type null not assignable
   public deleteEmployee: Employee = {} as Employee;  //maakt een lege Employee object aan, anders krijg je type null not assignable
   public employee: Employee = {} as Employee; //maakt een lege Employee object aan
@@ -36,32 +36,25 @@ export class AppComponent implements OnInit{
   }
 
 
-  public onOpenModal(employee: Employee | null, mode: string): void {  // | null toegevoegd zodat null een mogelijke type is.  
-    this.employee = {} as Employee; // JDR: toegevoegd om geen null object te krijgen in de modal/html. Misschien geeft dit een probleem???
-    if (employee !== null) {
-
+  public onOpenModal(employee: Employee, mode: string): void {
     const container = document.getElementById('main-container');
-    if (container) {
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.style.display = 'none';
-      button.setAttribute('data-toggle', 'modal');
-      if (mode === 'add') {
-        button.setAttribute('data-target', '#addEmployeeModal');
-        this.employee = {} as Employee; // JDR: toegevoegd om geen null object te krijgen in de modal/html. Misschien geeft dit een probleem???
-      }
-      if (mode === 'edit') {
-        this.employee = employee;
-        button.setAttribute('data-target', '#updateEmployeeModal');
-      }
-      if (mode === 'delete') {
-        this.employee = employee;
-        button.setAttribute('data-target', '#deleteEmployeeModal');
-      }
-      container.appendChild(button);
-      button.click();
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.style.display = 'none';
+    button.setAttribute('data-toggle', 'modal');
+    if (mode === 'add') {
+      button.setAttribute('data-target', '#addEmployeeModal');
     }
-  }
+    if (mode === 'edit') {
+      this.editEmployee = employee;
+      button.setAttribute('data-target', '#updateEmployeeModal');
+    }
+    if (mode === 'delete') {
+      this.deleteEmployee = employee;
+      button.setAttribute('data-target', '#deleteEmployeeModal');
+    }
+    container.appendChild(button);
+    button.click();
   }
     
 
@@ -69,13 +62,10 @@ export class AppComponent implements OnInit{
     this.employeeService.getEmployees().subscribe(
       (response: Employee[]) => {
         this.employees = response;
-      }, 
+        console.log(this.employees);
+      },
       (error: HttpErrorResponse) => {
-        if (error.message === null) {
-          alert("An error occurred while fetching employees.");
-        } else {
-          alert(error.message);
-        }
+        alert(error.message);
       }
     );
   }
@@ -87,7 +77,7 @@ export class AppComponent implements OnInit{
       if (employee.name.toLowerCase().indexOf(key.toLowerCase()) !== -1
       || employee.email.toLowerCase().indexOf(key.toLowerCase()) !== -1
       || employee.phone.toLowerCase().indexOf(key.toLowerCase()) !== -1
-      || employee.jobTitle.toLowerCase().indexOf(key.toLowerCase()) !== -1) {
+      || employee.job_title.toLowerCase().indexOf(key.toLowerCase()) !== -1) {
         results.push(employee);
       }
     }
@@ -99,12 +89,8 @@ export class AppComponent implements OnInit{
 
 
   
-public onAddEmployee(addForm: any): void {
-  if (addForm) {
-    const addFormElement = document.getElementById('add-employee-form');
-    if (addFormElement) {
-      addFormElement.click();
-    }
+public onAddEmployee(addForm: NgForm): void {
+  document.getElementById('add-employee-form').click();
     this.employeeService.addEmployee(addForm.value).subscribe(
       (response: Employee) => {
         console.log(response);
@@ -117,7 +103,6 @@ public onAddEmployee(addForm: any): void {
       }
     );
   }
-}
       
 
   public onUpdateEmployee(employee: Employee): void {
