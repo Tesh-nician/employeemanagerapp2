@@ -38,6 +38,7 @@ export class AppComponent implements OnInit{
 
   public onOpenModal(employee: Employee, mode: string): void {
     const container = document.getElementById('main-container');
+    if (container) {
     const button = document.createElement('button');
     button.type = 'button';
     button.style.display = 'none';
@@ -55,6 +56,9 @@ export class AppComponent implements OnInit{
     }
     container.appendChild(button);
     button.click();
+  } else {
+    console.error("Element with id 'main-container' not found");
+    }
   }
     
 
@@ -77,7 +81,7 @@ export class AppComponent implements OnInit{
       if (employee.name.toLowerCase().indexOf(key.toLowerCase()) !== -1
       || employee.email.toLowerCase().indexOf(key.toLowerCase()) !== -1
       || employee.phone.toLowerCase().indexOf(key.toLowerCase()) !== -1
-      || employee.job_title.toLowerCase().indexOf(key.toLowerCase()) !== -1) {
+      || employee.jobTitle.toLowerCase().indexOf(key.toLowerCase()) !== -1) {
         results.push(employee);
       }
     }
@@ -86,11 +90,20 @@ export class AppComponent implements OnInit{
       this.getEmployees();
     }
   }
+  
 
 
   
 public onAddEmployee(addForm: NgForm): void {
-  document.getElementById('add-employee-form').click();
+
+  const addEmployeeForm = document.getElementById('add-employee-form');
+  if (addEmployeeForm) {
+    addEmployeeForm.click();
+  } else {
+    console.error("Element with id 'add-employee-form' not found");
+    return; //is de return nodig???
+  }
+  
     this.employeeService.addEmployee(addForm.value).subscribe(
       (response: Employee) => {
         console.log(response);

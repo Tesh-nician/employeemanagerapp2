@@ -6,7 +6,8 @@
   <div class="collapse navbar-collapse" id="navbarColor02">
      <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-           <a class="nav-link" (click)="onOpenModal(null, 'add')">Add Employee <span class="sr-only">(current)</span></a>
+         <!-- dummy waarde voor id en employee code toegevoegd, wordt niet gebruikt-->
+         <a class="nav-link" (click)="onOpenModal({ id: 0, name: '', email: '', jobTitle: '', phone: '', imageUrl: '', employeeCode: '' }, 'add')">Add Employee <span class="sr-only">(current)</span></a>
         </li>
      </ul>
      <form class="form-inline my-2 my-lg-0">
@@ -20,12 +21,12 @@
   <div *ngFor="let employee of employees" class="col-md-6 col-xl-3">
      <div class="card m-b-30">
         <div class="card-body row">
-           <div class="col-6">
+           <div class="col-8">
               <a href=""><img src="{{employee?.imageUrl}}" alt="" class="img-fluid rounded-circle w-60"></a>
            </div>
-           <div class="col-6 card-title align-self-center mb-0">
+           <div class="col-8 card-title align-self-center mb-0">
               <h5>{{employee?.name}}</h5>
-              <p class="m-0">{{employee?.job_title}}</p>
+              <p class="m-0">{{employee?.jobTitle}}</p>
            </div>
         </div>
         <ul class="list-group list-group-flush">
@@ -64,7 +65,7 @@
           </div>
           <div class="form-group">
              <label for="job_title">Job title</label>
-             <input type="text" ngModel name="job_title" class="form-control" id="job_title" placeholder="Job title" required>
+             <input type="text" ngModel name="jobnTitle" class="form-control" id="jobTitle" placeholder="Job title" required>
           </div>
           <div class="form-group">
              <label for="phone">Phone</label>
@@ -108,7 +109,7 @@
               </div>
               <div class="form-group">
                  <label for="phone">Job title</label>
-                 <input type="text" ngModel="{{editEmployee?.job_title}}" name="jobTitle" class="form-control" id="jobTitle" placeholder="Job title">
+                 <input type="text" ngModel="{{editEmployee?.jobTitle}}" name="jobTitle" class="form-control" id="jobTitle" placeholder="Job title">
               </div>
               <div class="form-group">
                  <label for="phone">Phone</label>
